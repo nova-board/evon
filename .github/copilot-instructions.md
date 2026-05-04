@@ -2,17 +2,16 @@
 
 ## Project baseline
 
-- This repository is currently documentation-first: behavior and API expectations are defined in `README.md` and `docs/*.md`, not in in-repo implementation code.
-- Treat `docs/API.md` as the contract for the `@evon/core` public API and `docs/ARCHITECTURE.md` as the runtime behavior reference.
+- Phase 1 runtime implementation lives in `src/` and is exercised by tests in `__tests__/`.
+- Keep `docs/API.md` and `docs/ARCHITECTURE.md` aligned with implementation when changing public behavior.
 
 ## Build, test, and lint commands
 
-- No in-repo build, lint, or test commands are currently defined (no `package.json`, test runner config, or build system files are present).
-- A single-test command is not available in this repository at this time.
-- Package installation commands documented for consumers of `@evon/core`:
-  - `npm install @evon/core`
-  - `yarn add @evon/core`
-  - `pnpm add @evon/core`
+- Install dependencies: `npm install`
+- Lint (type-check): `npm run lint`
+- Build: `npm run build`
+- Full test suite: `npm test`
+- Single test file: `npm run test:single -- __tests__/evon.unit.test.ts`
 
 ## High-level architecture (Phase 1)
 
@@ -25,6 +24,7 @@
 Cross-file behavior to preserve:
 - `publish` auto-generates `id` and `timestamp` when omitted.
 - Handler errors are non-fatal to the bus flow (logged or passed to configured `errorHandler`).
+- Handler execution is synchronous for sync handlers; async handlers are invoked but not awaited.
 - Phase 1 is single-process, in-memory, and unbounded (no persistence/cleanup yet).
 
 ## Key conventions

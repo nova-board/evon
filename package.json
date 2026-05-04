@@ -1,0 +1,32 @@
+{
+  "name": "@evon/core",
+  "version": "0.1.0",
+  "description": "Evon event runtime core package",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:single": "vitest run"
+  },
+  "keywords": [
+    "event",
+    "runtime",
+    "event-sourcing",
+    "replay"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
+

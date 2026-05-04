@@ -55,6 +55,21 @@ evon.replay("topic")
 - [Getting Started](docs/GETTING_STARTED.md)
 - [FAQ](docs/FAQ.md)
 
+## Development
+
+```bash
+npm install
+npm run lint
+npm run build
+npm test
+```
+
+Run a single test file:
+
+```bash
+npm run test:single -- __tests__/evon.unit.test.ts
+```
+
 ## Relationship with NovaBoard
 
 Evon is a reusable runtime. NovaBoard is the first client application validating Evon through real use cases.
