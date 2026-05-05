@@ -52,8 +52,20 @@ const allEvents = evon.replay()
 // Replay specific topic
 const orderEvents = evon.replay('orders')
 
-// Handlers will execute for each replayed event
+// Handlers execute again for each replayed event (side effects can run again)
 ```
+
+### 5. Try the Realtime Board Demo
+
+Evon includes a simple multi-client WebSocket board demo in `apps/board`:
+
+```bash
+npm --prefix apps/board install
+npm --prefix apps/board run check
+npm --prefix apps/board start
+```
+
+Then open `http://localhost:8080` in two browser tabs and create/move boxes to see synchronized updates.
 
 ## Complete Example
 

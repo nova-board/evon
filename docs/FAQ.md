@@ -16,9 +16,9 @@ Evon prioritizes simplicity and developer experience over scalability.
 
 ### Can I use Evon in production?
 Phase 1 of Evon is designed for development and prototyping. For production use, consider:
-- Upgrading to Phase 2+ when persistence is added
+- Upgrading through Phase 2+ as persistence and operational tooling are added
 - Evaluating your scalability needs
-- Using Kafka/RabbitMQ for distributed systems
+- Starting with Redis-based multi-node support in Phase 4 before considering heavier infrastructure
 
 ### What are the memory requirements?
 Phase 1 stores all events in memory. Memory usage is proportional to:
@@ -50,7 +50,7 @@ const evon = createEvon({
 ```
 
 ### Are handler executions synchronous or async?
-Phase 1 handlers execute **synchronously** in order. Handlers declared as `async` will return a Promise, but the event bus won't wait for them. Phase 3 will add proper async support.
+Handler invocation order is synchronous per topic. If a handler returns a Promise, it is started but not awaited by the publisher. Phase 3 adds managed async processing (retry + error isolation).
 
 ### Can I unsubscribe from events?
 Yes, `subscribe()` returns an unsubscribe function:
@@ -244,7 +244,7 @@ Check:
 This is normal in Phase 1. Solutions:
 - Restart the process periodically
 - Limit event lifetime with application logic
-- Wait for Phase 2 persistence + cleanup
+- Move to Phase 2 file persistence and projection-based reads
 
 ### Why are subscribers not called during replay?
 Replay only calls *currently registered* subscribers. Register handlers before replaying:
@@ -283,10 +283,10 @@ console.log(events)
 Yes, in Phase 2. Coming soon.
 
 ### Will Evon support async handlers?
-Yes, in Phase 3. Currently all handlers are synchronous.
+Yes, in Phase 3. Phase 1 invokes async handlers but does not manage retries or delivery guarantees.
 
 ### Will Evon support multiple processes?
 Yes, in Phase 4 with Redis integration.
 
 ### Will there be a distributed version?
-Yes, planned for Phase 5 with Kafka/Kinesis integration.
+Phase 4 covers practical multi-node operation with Redis Pub/Sub. Phase 5 focuses on DX improvements (inspection tools, replay tooling, API ergonomics, optional schema validation) rather than introducing complex streaming infrastructure.

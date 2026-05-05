@@ -1,5 +1,10 @@
 # Evon API Reference - Phase 1
 
+## Phase Status
+
+- **Implemented now (Phase 1):** in-memory publish/subscribe, in-memory append-only store, replay through current subscribers, event querying via `getEvents`.
+- **Planned next (Phases 2-5):** file persistence and startup recovery, safer replay modes, async processing with retries/isolation, Redis multi-node transport, and developer tooling.
+
 ## Core Types
 
 ```typescript
@@ -17,8 +22,8 @@ type EventHandler = (event: Event) => void | Promise<void>
 type EventFilter = {
   topic?: string
   type?: string
-  from?: number     // Timestamp or index
-  to?: number       // Timestamp or index
+  from?: number     // < 100_000_000_000 => index, otherwise timestamp
+  to?: number       // < 100_000_000_000 => index, otherwise timestamp
   limit?: number
 }
 
@@ -78,6 +83,8 @@ unsubscribe()
 
 Replay events from the event store and execute handlers.
 
+Note: replay is not read-only. It re-invokes currently registered handlers and may trigger their side effects.
+
 **Parameters:**
 - `topic` (optional) - Replay only events from this topic
 - `from` (optional) - Start from event index (default: 0)
@@ -97,6 +104,8 @@ const users = evon.replay('users')
 // Replay from index 10 onwards
 const partial = evon.replay('users', 10)
 ```
+
+Phase 2 roadmap includes a state-only replay path for rebuilding projections without re-broadcasting side effects.
 
 ---
 

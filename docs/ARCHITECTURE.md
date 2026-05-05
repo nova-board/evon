@@ -96,6 +96,8 @@ For each event in order:
 Return replayed events
 ```
 
+Current behavior: replay executes current subscribers again. If a subscriber broadcasts to WebSocket clients, replay can trigger those side effects again. Phase 2 will add a state-only replay mode to avoid re-broadcast when rebuilding state.
+
 ## Event Structure
 
 ```typescript
@@ -125,7 +127,7 @@ interface Event {
 ## Limitations (Phase 1)
 
 - No persistence between process restarts
-- No async/retry capabilities
+- No managed async pipeline (retry/isolation/dead-letter)
 - No event ordering across topics
 - Events stored indefinitely (memory leak risk in long-running processes)
 - No distributed coordination
@@ -133,7 +135,7 @@ interface Event {
 
 ## Future Extensions
 
-- **Phase 2:** Persistent storage backends (file, database)
-- **Phase 3:** Async handlers with retry and dead-letter queues
-- **Phase 4:** Multi-process with Redis Pub/Sub
-- **Phase 5:** Stream processing (Kafka integration)
+- **Phase 2 (Persistence + Replay):** File-based append-only EventStore, startup load, state-only replay mode, `applyEvent` projection, and basic write/read model separation.
+- **Phase 3 (Async Processing):** Async handler execution, basic retries, and per-handler error isolation with dead-letter file support.
+- **Phase 4 (Multi-node):** Redis Pub/Sub transport, multiple WebSocket nodes, per-key ordering (e.g. `objectId`), and duplicate suppression.
+- **Phase 5 (DX):** Event stream inspection tools, replay/time-travel commands, developer API polish, and optional event schema validation.

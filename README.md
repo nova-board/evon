@@ -42,13 +42,28 @@ evon.subscribe("topic", handler)
 evon.replay("topic")
 ```
 
+## Current Status
+
+Phase 1 is complete:
+
+- In-memory EventBus (publish/subscribe)
+- In-memory append-only EventStore
+- WebSocket board demo in `apps/board` (create + move objects)
+- Multi-client synchronization on a single node
+
+Current limitations:
+
+- No persistence across restarts
+- Replay re-invokes current handlers (side effects can run again)
+- No managed async pipeline (retry/isolation/dead-letter)
+
 ## Development Roadmap
 
-1. **Phase 1**: Local runtime (in-memory bus/store + replay)
-2. **Phase 2**: Persistence (file/DB-backed event store)
-3. **Phase 3**: Async processing (retry, ack, error handling)
-4. **Phase 4**: Scaling (Redis Pub/Sub, multi-node)
-5. **Phase 5**: Streaming integrations (Kafka/Kinesis)
+1. **Phase 1 (Done)**: Local runtime (in-memory bus/store + replay)
+2. **Phase 2**: Persistence + replay hardening (file-based append-only store, load on startup, state-only replay path, `applyEvent` state builder, basic write/read model split)
+3. **Phase 3**: Async processing (async handlers, basic retry, per-handler error isolation + dead-letter)
+4. **Phase 4**: Multi-node/distributed basics (Redis Pub/Sub transport, multi-node WebSocket fan-out, per-key ordering, duplicate suppression)
+5. **Phase 5**: Developer experience (event stream inspection, replay/time-travel tooling, API polish, optional schema validation)
 
 ## Documentation
 
