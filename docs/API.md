@@ -1,4 +1,4 @@
-# Evon API Reference - Phase 1
+# Evon API Reference
 
 ## Phase Status
 

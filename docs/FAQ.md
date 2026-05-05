@@ -277,7 +277,7 @@ console.log(events)
 
 ---
 
-## Future (Post-Phase 1)
+## Future Roadmap
 
 ### Will Evon support persistence?
 Yes, in Phase 2. Coming soon.

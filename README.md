@@ -19,7 +19,7 @@ Evon focuses on local-first development and a simple API surface:
 - **Consumer**: handler that reacts to events
 - **Replay**: rerun events to rebuild state
 
-## Architecture (Phase 1)
+## Architecture (Current)
 
 ```text
 Publisher

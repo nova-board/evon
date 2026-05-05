@@ -1,4 +1,4 @@
-# Evon Architecture - Phase 1
+# Evon Architecture
 
 ## System Overview
 
@@ -124,7 +124,7 @@ interface Event {
 - **Subscriptions:** Map<topic, Set<handlers>>
 - **Cleanup:** No automatic cleanup (Phase 2 concern)
 
-## Limitations (Phase 1)
+## Current Limitations
 
 - No persistence between process restarts
 - No managed async pipeline (retry/isolation/dead-letter)
