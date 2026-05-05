@@ -94,7 +94,7 @@ export function createEvon(config: EvonConfig = {}): Evon {
   const publish = (event: Partial<Event>): Event => {
     const normalized = normalizeEvent(event)
     store.append(normalized)
-    bus.emit(normalized)
+    bus.publish(normalized)
 
     if (enableLogging) {
       console.info(`[evon] published ${normalized.topic}:${normalized.type}`)

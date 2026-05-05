@@ -24,12 +24,14 @@ Evon focuses on local-first development and a simple API surface:
 ```text
 Publisher
    ↓
+Event normalization
+   ↓
+EventStore (append-only)
+   ↓
 EventBus
    ↓
 + Consumer A
 + Consumer B
-   ↓
-EventStore (append-only)
 ```
 
 ## API (V1)

@@ -75,6 +75,14 @@ export class EventStore {
     return this.events.length
   }
 
+  getEventsByTopic(topic: string): Event[] {
+    if (typeof topic !== 'string' || topic.trim().length === 0) {
+      throw new EventError('"topic" must be a non-empty string.')
+    }
+
+    return (this.topicIndex.get(topic) ?? []).slice()
+  }
+
   getTopicCounts(): Record<string, number> {
     const counts: Record<string, number> = {}
 

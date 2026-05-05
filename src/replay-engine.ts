@@ -33,7 +33,7 @@ export class ReplayEngine {
 
     const events = this.getEvents(topic).slice(from)
     for (const event of events) {
-      this.bus.emit(event)
+      this.bus.publish(event)
     }
     return events
   }
@@ -50,7 +50,7 @@ export class ReplayEngine {
       : events.filter((event) => event.timestamp <= timestamp)
 
     for (const event of replayed) {
-      this.bus.emit(event)
+      this.bus.publish(event)
     }
 
     return replayed
@@ -60,7 +60,7 @@ export class ReplayEngine {
     if (topic === undefined) {
       return this.store.getEvents()
     }
-    return this.store.getEvents({ topic })
+    return this.store.getEventsByTopic(topic)
   }
 }
 

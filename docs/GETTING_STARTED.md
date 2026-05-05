@@ -254,7 +254,7 @@ describe('User Service', () => {
 - Explore [API Reference](./API.md)
 - Read [Architecture Guide](./ARCHITECTURE.md)
 - Check [Examples](../examples)
-- Review [Design Principles](../README.md#design-principles)
+- Review [Core Concepts](../README.md#core-concepts)
 
 ## Need Help?
 

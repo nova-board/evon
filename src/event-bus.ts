@@ -49,6 +49,10 @@ export class EventBus {
   }
 
   emit(event: Event): void {
+    this.publish(event)
+  }
+
+  publish(event: Event): void {
     const handlers = this.subscribers.get(event.topic)
     if (handlers === undefined || handlers.size === 0) {
       return

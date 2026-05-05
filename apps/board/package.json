@@ -1,0 +1,18 @@
+{
+  "name": "evon-board",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "start": "tsx server/index.ts",
+    "check": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "@types/ws": "^8.5.13",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

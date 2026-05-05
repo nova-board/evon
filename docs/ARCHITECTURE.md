@@ -5,12 +5,14 @@
 ```
 Publisher (App Code)
     ↓
+Event normalization (id/timestamp defaults + validation)
+    ↓
+EventStore (append-only in-memory log)
+    ↓
 EventBus (in-memory pub/sub router)
     ├→ Consumer Handler A
     ├→ Consumer Handler B
     └→ Consumer Handler C
-    ↓
-EventStore (append-only in-memory log)
     ↓
 Replay Engine (rebuild state from events)
 ```
@@ -61,10 +63,14 @@ Replay Engine (rebuild state from events)
 ```
 App calls evon.publish(event)
     ↓
+Event normalization (id/timestamp defaults + validation)
+    ↓
+EventStore.append(event)
+    ↓
 EventBus.publish(event)
-    ├ EventStore.append(event)
-    └ For each subscriber in topic:
-        └ handler.execute(event)
+    ↓
+For each subscriber in topic:
+    └ handler.execute(event)
 ```
 
 ## Data Flow - Subscribing
@@ -105,8 +111,8 @@ interface Event {
 
 ## Handler Execution Model
 
-- **Synchronous:** Handlers execute in publish order
-- **Blocking:** Publisher waits for all handlers to complete
+- **Synchronous ordering:** Handlers are invoked in publish order for each topic
+- **Async behavior:** Async handlers are started but not awaited
 - **Order:** Guaranteed per topic, no cross-topic ordering
 - **Error:** Handler errors don't stop other handlers (logged)
 
