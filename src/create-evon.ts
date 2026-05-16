@@ -1,9 +1,14 @@
 import { randomUUID } from 'crypto'
 import { EventBus } from './event-bus'
 import { EventStore } from './event-store'
+import { FileEventStore } from './file-event-store'
 import { EventError, HandlerError } from './errors'
 import { ReplayEngine } from './replay-engine'
+import { applyEvents } from './projection'
 import type { Event, EventFilter, EventHandler, EventStats, Evon, EvonConfig } from './types'
+
+export type { Reducer, ApplyEventsOptions } from './projection'
+export { applyEvents }
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -70,7 +75,16 @@ function normalizeEvent(input: Partial<Event>): Event {
 
 export function createEvon(config: EvonConfig = {}): Evon {
   const enableLogging = config.enableLogging ?? false
-  const store = new EventStore()
+
+  // Write model: choose persistent or in-memory store based on config.
+  const store = config.persistence !== undefined
+    ? new FileEventStore(config.persistence.filePath)
+    : new EventStore()
+
+  if (enableLogging && config.persistence !== undefined) {
+    const count = store.getEventCount()
+    console.info(`[evon] loaded ${count} event(s) from ${config.persistence.filePath}`)
+  }
 
   const onHandlerError = (error: unknown, event: Event, handler: EventHandler): void => {
     const wrapped = error instanceof HandlerError
@@ -103,12 +117,15 @@ export function createEvon(config: EvonConfig = {}): Evon {
     return normalized
   }
 
-  const replay = (topic?: string, from = 0): Event[] => {
-    const replayed = replayEngine.replay(topic, from)
+  const replay = (topic?: string, from = 0, stateOnly = false): Event[] => {
+    const replayed = stateOnly
+      ? replayEngine.replayStateOnly(topic, from)
+      : replayEngine.replay(topic, from)
 
     if (enableLogging) {
       const replayTarget = topic === undefined ? 'all-topics' : topic
-      console.info(`[evon] replayed ${replayed.length} event(s) for ${replayTarget}`)
+      const mode = stateOnly ? 'state-only' : 'full'
+      console.info(`[evon] replayed ${replayed.length} event(s) for ${replayTarget} (${mode})`)
     }
 
     return replayed
@@ -146,4 +163,3 @@ export function createEvon(config: EvonConfig = {}): Evon {
     clear
   }
 }
-

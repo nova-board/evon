@@ -1,7 +1,6 @@
 import { ReplayError } from './errors'
 import { EventBus } from './event-bus'
-import { EventStore } from './event-store'
-import type { Event } from './types'
+import type { Event, IEventStore } from './types'
 
 function validateTopic(topic: string | undefined): void {
   if (topic !== undefined && (typeof topic !== 'string' || topic.trim().length === 0)) {
@@ -23,10 +22,14 @@ function validateTimestamp(timestamp: number): void {
 
 export class ReplayEngine {
   constructor(
-    private readonly store: EventStore,
+    private readonly store: IEventStore,
     private readonly bus: EventBus
   ) {}
 
+  /**
+   * Replay stored events through all live subscribers (including side-effect
+   * handlers such as WebSocket broadcasters).  Use this for full re-processing.
+   */
   replay(topic?: string, from = 0): Event[] {
     validateTopic(topic)
     validateFrom(from)
@@ -36,6 +39,19 @@ export class ReplayEngine {
       this.bus.publish(event)
     }
     return events
+  }
+
+  /**
+   * State-only replay: return the slice of stored events without publishing
+   * them to any subscriber on the bus.  Side-effect handlers (e.g. WebSocket
+   * broadcasters) are never invoked.  Pair with `applyEvents` to fold the
+   * returned events into a read-model projection.
+   */
+  replayStateOnly(topic?: string, from = 0): Event[] {
+    validateTopic(topic)
+    validateFrom(from)
+
+    return this.getEvents(topic).slice(from)
   }
 
   replayTo(topic?: string, timestamp?: number): Event[] {
@@ -63,4 +79,3 @@ export class ReplayEngine {
     return this.store.getEventsByTopic(topic)
   }
 }
-
