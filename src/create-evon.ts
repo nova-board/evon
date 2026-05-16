@@ -7,7 +7,7 @@ import { ReplayEngine } from './replay-engine'
 import { applyEvents } from './projection'
 import type { Event, EventFilter, EventHandler, EventStats, Evon, EvonConfig } from './types'
 
-export type { Reducer } from './projection'
+export type { Reducer, ApplyEventsOptions } from './projection'
 export { applyEvents }
 
 function isObject(value: unknown): value is Record<string, unknown> {

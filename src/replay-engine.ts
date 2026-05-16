@@ -1,10 +1,6 @@
 import { ReplayError } from './errors'
 import { EventBus } from './event-bus'
-import { EventStore } from './event-store'
-import { FileEventStore } from './file-event-store'
-import type { Event } from './types'
-
-type AnyEventStore = EventStore | FileEventStore
+import type { Event, IEventStore } from './types'
 
 function validateTopic(topic: string | undefined): void {
   if (topic !== undefined && (typeof topic !== 'string' || topic.trim().length === 0)) {
@@ -26,7 +22,7 @@ function validateTimestamp(timestamp: number): void {
 
 export class ReplayEngine {
   constructor(
-    private readonly store: AnyEventStore,
+    private readonly store: IEventStore,
     private readonly bus: EventBus
   ) {}
 

@@ -203,7 +203,7 @@ describe('createEvon with persistence', () => {
 
     expect(evon2.getEvents()).toHaveLength(2)
 
-    // A third restart should see all three.
+    // A third restart should see all two persisted events.
     const evon3 = createEvon({ persistence: { filePath } })
     expect(evon3.getEvents()).toHaveLength(2)
   })
